@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+streamlit
+pydantic
+pydantic-settings
+pytest
+ruff
+black
+mypy
+pre-commit
