@@ -1,3 +1,4 @@
+# Extract text from PDFs and convert into structured document format
 from typing import Dict
 
 try:
