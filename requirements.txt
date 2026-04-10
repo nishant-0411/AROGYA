@@ -9,3 +9,5 @@ black
 mypy
 pre-commit
 PyPDF2
+pypdf
+pytesseract
