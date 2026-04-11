@@ -11,3 +11,9 @@ pre-commit
 PyPDF2
 pypdf
 pytesseract
+pymupdf
+unstructured
+pillow
+python-multipart
+langchain
+langchain-community

@@ -1,27 +1,18 @@
-# Extract text from PDFs and convert into structured document format
+"""This module provides functionality to extract text from PDF files using Langchain's PyPDFLoader."""
 from typing import Dict
-
-try:
-    from pypdf import PdfReader
-except ModuleNotFoundError:
-    try:
-        from PyPDF2 import PdfReader
-    except ModuleNotFoundError as exc:
-        raise ModuleNotFoundError(
-            "PDF support requires 'pypdf' or 'PyPDF2'. Install project "
-            "dependencies before processing PDFs."
-        ) from exc
-
+from langchain_community.document_loaders import PyPDFLoader
 
 def process_pdf(file_path: str) -> Dict:
-    text = ""
-    with open(file_path, "rb") as f:
-        reader = PdfReader(f)
-        for page in reader.pages:
-            text += page.extract_text() or ""
-
+    loader = PyPDFLoader(file_path)
+    docs = loader.load()
+    
+    text = "\n".join([doc.page_content for doc in docs])
+    
     return {
         "type": "pdf",
         "content": text,
-        "metadata": {"source": file_path}
+        "metadata": {
+            "source": file_path,
+            "total_pages": len(docs)
+        }
     }
