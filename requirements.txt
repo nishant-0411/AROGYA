@@ -17,3 +17,5 @@ pillow
 python-multipart
 langchain
 langchain-community
+qdrant-client 
+sentence-transformers

@@ -329,8 +329,7 @@ Exit criteria:
 - API starts locally
 - UI starts locally
 
-## Phase 1 - Multimodal Ingestion Baseline
-
+## Phase 1 - Multimodal Ingestion Baseline - Done
 Goal: accept image, PDF, and text inputs and convert them into normalized internal documents.
 
 Create next:
