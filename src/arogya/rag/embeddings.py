@@ -1,6 +1,6 @@
 """Creating Local Embedding Models using Huggingface """
 
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 def get_embedding_model():
     model = HuggingFaceEmbeddings(

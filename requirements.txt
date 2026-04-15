@@ -19,3 +19,4 @@ langchain
 langchain-community
 qdrant-client 
 sentence-transformers
+langchain_huggingface
