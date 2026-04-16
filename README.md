@@ -19,9 +19,9 @@ This project is meant to showcase all three layers together:
 
 - `ML engineering`: dataset preparation, fine-tuning, multimodal pipelines
 - `MLOps`: evals, monitoring, serving, containerization, deployment
-- `system design`: agents, memory, tools, async workflows, retrieval stack
+- `system design`: LangChain agents, memory, tools, async workflows, retrieval stack
 
-That makes `Arogya` much stronger than a basic chatbot clone and much closer to a production-ready AI system.
+That makes `Arogya` much stronger than a basic chatbot clone, built entirely on **free and open-source resources**, and much closer to a production-ready AI system.
 
 ## Core Use Case
 
@@ -55,11 +55,11 @@ The project follows the `OmniMind` design in four layers:
 
 ### 3. Core Intelligence Layer
 
-- orchestrator graph
+- LangChain-based orchestration
 - short-term and long-term memory
-- vector retrieval
-- external tools such as PubMed and web search
-- model gateway for base and fine-tuned models
+- vector retrieval (free local vector db)
+- external free tools such as PubMed and DuckDuckGo search
+- model gateway for local open-source models (via Ollama) and fine-tuned models
 
 ### 4. Output and Serving
 
@@ -97,9 +97,8 @@ The project follows the `OmniMind` design in four layers:
 
 ### Retrieval and evaluation
 
-- `LangGraph`
+- `LangChain`
 - `ragas`
-- `LangSmith`
 - `MLflow`
 - `pytest`
 - `ruff`
@@ -188,10 +187,10 @@ Multi-agent orchestration:
 
 Memory and tooling:
 
-- session memory
+- session memory (LangChain)
 - persistent case memory
 - PubMed integration
-- optional external search
+- optional external search (DuckDuckGo or other free API)
 
 ### Phase 5
 

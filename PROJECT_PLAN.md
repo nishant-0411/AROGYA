@@ -160,8 +160,8 @@ AROGYA/
 
 ## Vision
 
-`Arogya` is a production-style multimodal medical research assistant inspired by your `OmniMind` architecture.
-It should accept image, PDF, text, and optional audio input; run multiple specialized agents; use RAG for grounded answers; optionally use a fine-tuned model for domain adaptation; and return a citation-backed analysis report.
+`Arogya` is a production-style multimodal medical research assistant inspired by your `OmniMind` architecture, built heavily on **LangChain** and exclusively utilizing **free, open-source resources**.
+It should accept image, PDF, text, and optional audio input; run multiple specialized LangChain agents powered by local models (e.g., via Ollama); use RAG for grounded answers; optionally use a fine-tuned local model for domain adaptation; and return a citation-backed analysis report.
 
 This project is strongest as a portfolio piece when it visibly demonstrates:
 
@@ -185,7 +185,7 @@ This project is strongest as a portfolio piece when it visibly demonstrates:
 
 ### LLM and multimodal stack
 
-- `LangGraph` or a lightweight custom graph for agent orchestration
+- `LangChain` for agent orchestration and pipelines
 - `transformers`
 - `sentence-transformers`
 - `peft`
@@ -197,13 +197,12 @@ This project is strongest as a portfolio piece when it visibly demonstrates:
 - `unstructured`
 - `pytesseract`
 - `Pillow`
-- `open_clip_torch` or a vision-capable API/model
+- `open_clip_torch` or a free vision-capable local model (e.g. LLaVA via Ollama)
 - `openai-whisper` for optional audio transcription
 
 ### Retrieval, eval, observability
 
 - `ragas`
-- `langsmith`
 - `mlflow`
 - `deepeval` or custom eval harness
 - `prometheus-client`
@@ -231,7 +230,7 @@ Use dependency groups instead of many separate requirement files:
 - `ml`: torch, transformers, peft, trl, sentence-transformers
 - `rag`: qdrant-client, rank-bm25, pymupdf, unstructured, pypdf
 - `worker`: celery, redis
-- `eval`: ragas, deepeval, mlflow, langsmith
+- `eval`: ragas, deepeval, mlflow
 
 Example package list to install over time:
 
@@ -247,7 +246,6 @@ alembic
 redis
 celery
 qdrant-client
-langgraph
 langchain
 langchain-community
 transformers
@@ -266,7 +264,6 @@ pillow
 open_clip_torch
 openai-whisper
 ragas
-langsmith
 mlflow
 prometheus-client
 structlog
@@ -416,7 +413,6 @@ Create next:
 
 Install in this phase:
 
-- `langgraph`
 - `langchain`
 - `langchain-community`
 - `httpx`
@@ -458,10 +454,10 @@ Install in this phase:
 
 Work items:
 
-- Add session-level chat memory
+- Add session-level chat memory (LangChain native)
 - Add persistent case memory
-- Add PubMed or curated-research tool
-- Keep external web search optional and clearly labeled
+- Add PubMed or curated-research free tool
+- Keep external web search optional and clearly labeled (DuckDuckGo)
 
 Exit criteria:
 
@@ -527,7 +523,7 @@ Install in this phase:
 
 Suggested fine-tune target:
 
-- Start with a small instruction-tuned open model and train LoRA adapters on medical summarization, evidence-grounded QA, or report formatting tasks
+- Start with a small instruction-tuned open-source model (e.g. Llama-3 8B, Mistral) locally and train LoRA adapters on medical summarization, evidence-grounded QA, or report formatting tasks
 
 Do not fine-tune first.
 First prove that the RAG baseline works.
@@ -557,7 +553,6 @@ Install in this phase:
 - `deepeval`
 - `pandas`
 - `plotly`
-- `langsmith`
 
 Metrics to track:
 
