@@ -15,19 +15,20 @@ router = APIRouter()
 
 @router.post("/upload")
 async def upload_files(file: UploadFile):
-    file_path = f"temp_{file.filename}"
+    filename = file.filename or "unknown"
+    file_path = f"temp_{filename}"
 
     with open(file_path, 'wb') as f:
         f.write(await file.read())
 
     try:
-        if file.filename.endswith(".pdf"):
+        if filename.endswith(".pdf"):
             result = process_pdf(file_path)
         
-        elif file.filename.endswith((".png", ".jpg", ".jpeg")):
+        elif filename.endswith((".png", ".jpg", ".jpeg")):
             result = process_image(file_path)
         
-        elif file.filename.endswith(".txt"):
+        elif filename.endswith(".txt"):
             result = process_text(file_path)
             
         else:
