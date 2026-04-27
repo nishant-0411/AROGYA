@@ -9,6 +9,7 @@ from langgraph.graph import StateGraph, END
 from src.arogya.orchestrator.state import AgentState
 from src.arogya.agents.triage_agent import triage_node
 from src.arogya.agents.rag_agent import rag_node
+from src.arogya.agents.vision_agent import vision_node
 from src.arogya.agents.verifier_agent import verifier_node
 from src.arogya.agents.report_agent import report_node
 
@@ -21,6 +22,7 @@ def create_workflow():
     # Add nodes
     workflow.add_node("triage", triage_node)
     workflow.add_node("rag", rag_node)
+    workflow.add_node("vision", vision_node)
     workflow.add_node("verifier", verifier_node)
     workflow.add_node("report", report_node)
     
@@ -30,11 +32,13 @@ def create_workflow():
         "triage",
         route_after_triage,
         {
+            "vision": "vision",
             "rag": "rag",
             "report": "report"
         }
     )
     
+    workflow.add_edge("vision", "rag")
     workflow.add_edge("rag", "verifier")
     workflow.add_edge("verifier", "report")
     workflow.add_edge("report", END)

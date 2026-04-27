@@ -8,8 +8,14 @@ from src.arogya.orchestrator.state import AgentState
 
 def triage_node(state: AgentState):
     query = state.get("user_query", "").lower()
+    image_paths = state.get("image_paths", [])
 
-    if any(word in query for word in ["what", "define", "explain"]): #Basic
+    if image_paths:
+        return {
+            "scratchpad": "\n[Triage] Images detected, routing to vision agent",
+            "route": "vision"
+        }
+    elif any(word in query for word in ["what", "define", "explain"]): #Basic
         return {
             "scratchpad": "\n[Triage] Simple query detected",
             "route": "report"

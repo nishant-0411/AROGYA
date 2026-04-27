@@ -14,6 +14,7 @@ class AgentState(TypedDict):
     user_query: str
     session_id: str
     patient_id: str
+    image_paths: List[str]
     chat_history: List[str]
     case_summary: str
     retrieved_docs: Annotated[List[str], operator.add]
