@@ -15,12 +15,19 @@ def vision_node(state: AgentState):
             "scratchpad": "\n[Vision] No images provided. Skipping vision analysis."
         }
     
-    # Mock vision processing setup
-    # In a real setup, this would call open_clip_torch or a local multimodal model (e.g., LLaVA)
+    from src.arogya.models.vision_gateway import VisionGateway
+    
+    # Initialize gateway (in real setup, this would be injected or instantiated once)
+    gateway = VisionGateway()
+    
     findings = []
     for path in image_paths:
-        # Simulate extraction of visual features
-        findings.append(f"- Analyzed {path}: Simulated finding indicating normal anatomical structures without acute pathology.")
+        try:
+            # Query the vision model
+            finding = gateway.analyze_medical_image(path)
+            findings.append(f"- Analyzed {path}:\n  {finding}")
+        except Exception as e:
+            findings.append(f"- Failed to analyze {path}: {str(e)}")
     
     combined_findings = "\n".join(findings)
     
