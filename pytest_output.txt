@@ -1,0 +1,49 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- /Users/nishant/Resume Projects/AROGYA/.venv/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /Users/nishant/Resume Projects/AROGYA
+configfile: pyproject.toml
+plugins: langsmith-0.7.30, anyio-4.13.0
+collecting ... collected 1 item
+
+tests/integration/test_rag_pipeline.py::test_rag_pipeline_end_to_end Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Testing the RAG Pipeline (End-to-End)...
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 9112.67it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+FAILED
+
+=================================== FAILURES ===================================
+_________________________ test_rag_pipeline_end_to_end _________________________
+tests/integration/test_rag_pipeline.py:61: in test_rag_pipeline_end_to_end
+    retrieved_docs = retriever.invoke(query)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/langchain_core/retrievers.py:222: in invoke
+    result = self._get_relevant_documents(
+.venv/lib/python3.13/site-packages/langchain_core/vectorstores/base.py:1045: in _get_relevant_documents
+    docs = self.vectorstore.similarity_search(query, **kwargs_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/langchain_community/vectorstores/qdrant.py:288: in similarity_search
+    results = self.similarity_search_with_score(
+.venv/lib/python3.13/site-packages/langchain_community/vectorstores/qdrant.py:364: in similarity_search_with_score
+    return self.similarity_search_with_score_by_vector(
+.venv/lib/python3.13/site-packages/langchain_community/vectorstores/qdrant.py:610: in similarity_search_with_score_by_vector
+    results = self.client.search(
+              ^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'QdrantClient' object has no attribute 'search'
+------------------------------ Captured log call -------------------------------
+WARNING  huggingface_hub.utils._http:_http.py:916 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+=============================== warnings summary ===============================
+tests/integration/test_rag_pipeline.py::test_rag_pipeline_end_to_end
+  /Users/nishant/Resume Projects/AROGYA/src/arogya/rag/retriever.py:7: LangChainDeprecationWarning: The class `Qdrant` was deprecated in LangChain 0.0.37 and will be removed in 1.0. An updated version of the class exists in the `langchain-qdrant package and should be used instead. To use it run `pip install -U `langchain-qdrant` and import as `from `langchain_qdrant import Qdrant``.
+    vectorstore = Qdrant(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_rag_pipeline.py::test_rag_pipeline_end_to_end
+======================== 1 failed, 1 warning in 17.50s =========================

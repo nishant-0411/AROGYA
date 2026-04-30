@@ -1,13 +1,13 @@
 """Connect to Qdrant and retrieve relevant chunks"""
 
-from langchain_community.vectorstores import Qdrant
+from langchain_qdrant import QdrantVectorStore
 from langchain_core.documents import Document
 
 def create_vectorstore(client, collection_name, embeddings):
-    vectorstore = Qdrant(
+    vectorstore = QdrantVectorStore(
         client=client,
         collection_name=collection_name,
-        embeddings=embeddings
+        embedding=embeddings
     )
     return vectorstore
 
