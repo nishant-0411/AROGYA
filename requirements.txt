@@ -21,3 +21,13 @@ qdrant-client
 sentence-transformers
 langchain_huggingface
 langchain-qdrant
+langgraph
+langchain-text-splitters
+langchain-core
+pandas
+datasets
+ragas
+torch
+transformers
+peft
+trl

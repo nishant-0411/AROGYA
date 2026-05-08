@@ -12,14 +12,14 @@ def test_create_vectorstore():
     embeddings_mock = MagicMock()
     collection_name = "test_collection"
     
-    with patch('src.arogya.rag.retriever.Qdrant') as MockQdrant:
+    with patch('src.arogya.rag.retriever.QdrantVectorStore') as MockQdrantVectorStore:
         vectorstore = create_vectorstore(client_mock, collection_name, embeddings_mock)
-        MockQdrant.assert_called_once_with(
+        MockQdrantVectorStore.assert_called_once_with(
             client=client_mock,
             collection_name=collection_name,
-            embeddings=embeddings_mock
+            embedding=embeddings_mock
         )
-        assert vectorstore == MockQdrant.return_value
+        assert vectorstore == MockQdrantVectorStore.return_value
 
 def test_add_documnents():
     vectorstore_mock = MagicMock()
