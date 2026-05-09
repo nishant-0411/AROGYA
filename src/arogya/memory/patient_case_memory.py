@@ -1,7 +1,7 @@
 import os
 import json
 from typing import Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 try:
     from sqlalchemy import create_engine, Column, String, Text, DateTime, JSON
@@ -13,8 +13,8 @@ try:
         __tablename__ = "patient_cases"
         
         patient_id = Column(String, primary_key=True, index=True)
-        created_at = Column(DateTime, default=datetime.utcnow)
-        updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+        updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
         demographics = Column(JSON, default=dict)
         medical_history = Column(JSON, default=list)
         current_medications = Column(JSON, default=list)

@@ -6,7 +6,7 @@ Triggers the agent orchestrator via LangGraph.
 """
 
 from fastapi import APIRouter
-from ...schemas.chat import ChatRequest, ChatResponse
+from apps.api.schemas.chat import ChatRequest, ChatResponse
 from arogya.orchestrator.graph import run_agent_workflow
 from arogya.memory.session_memory import get_session_history
 from arogya.memory.patient_case_memory import PatientCaseMemory
