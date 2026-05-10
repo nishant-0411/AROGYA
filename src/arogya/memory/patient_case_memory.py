@@ -93,10 +93,10 @@ class PatientCaseMemory:
             if not case_data:
                 case_data = {
                     "patient_id": patient_id,
-                    "created_at": datetime.utcnow().isoformat()
+                    "created_at": datetime.now(timezone.utc).isoformat()
                 }
             case_data.update(updates)
-            case_data["updated_at"] = datetime.utcnow().isoformat()
+            case_data["updated_at"] = datetime.now(timezone.utc).isoformat()
             
             with open(self._get_file_path(patient_id), 'w') as f:
                 json.dump(case_data, f, indent=2)
