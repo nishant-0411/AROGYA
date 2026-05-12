@@ -42,7 +42,7 @@ class RagasEvaluator:
             llm=self.llm,
             embeddings=self.embeddings,
         )
-        return result.to_pandas()
+        return result.to_pandas()  # type: ignore
 
     def evaluate_single(
         self,
