@@ -5,10 +5,11 @@ Tests the full multi-agent orchestration end-to-end.
 """
 
 from src.arogya.orchestrator.graph import run_agent_workflow
+from src.arogya.orchestrator.state import AgentState
 
 def test_chat_workflow_simple_query():
     print("Testing the chat orchestration (Simple Query)...")
-    initial_state = {
+    initial_state: AgentState = {
         "user_query": "What is COVID-19?",
         "session_id": "test_session_1",
         "patient_id": "test_patient_1",
@@ -29,7 +30,7 @@ def test_chat_workflow_simple_query():
 
 def test_chat_workflow_complex_query():
     print("Testing the chat orchestration (Complex Query)...")
-    initial_state = {
+    initial_state: AgentState = {
         "user_query": "Provide a detailed analysis on the side effects of mRNA vaccinations.",
         "session_id": "test_session_2",
         "patient_id": "test_patient_2",
