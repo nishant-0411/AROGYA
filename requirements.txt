@@ -31,3 +31,6 @@ torch
 transformers
 peft
 trl
+deepeval
+plotly
+numpy
