@@ -108,14 +108,15 @@ The project follows the `OmniMind` design in four layers:
 
 Current state:
 
-- architecture diagram added
-- full phased project plan added
-- implementation scaffold not created yet
+- architecture diagram and project plan added
+- implementation in progress (Phases 0-7 complete)
+- FastAPI backend and Streamlit UI available
+- evaluation suites and hallucination detection integrated
 
 Roadmap source:
 
-- [PROJECT_PLAN.md](/Users/nishant/Resume Projects/AROGYA/PROJECT_PLAN.md)
-- [omnimind_architecture.svg](/Users/nishant/Resume Projects/AROGYA/omnimind_architecture.svg)
+- [PROJECT_PLAN.md](PROJECT_PLAN.md)
+- [omnimind_architecture.svg](omnimind_architecture.svg)
 
 ## Planned Repository Structure
 
@@ -275,14 +276,24 @@ Rules for the build:
 
 ## Getting Started
 
-Implementation has not been scaffolded yet, but the recommended first files are:
+1. Create a virtual environment and install dependencies:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
 
-- [pyproject.toml](/Users/nishant/Resume Projects/AROGYA/pyproject.toml)
-- [.env.example](/Users/nishant/Resume Projects/AROGYA/.env.example)
-- [Makefile](/Users/nishant/Resume Projects/AROGYA/Makefile)
-- [apps/api/main.py](/Users/nishant/Resume Projects/AROGYA/apps/api/main.py)
-- [apps/ui/app.py](/Users/nishant/Resume Projects/AROGYA/apps/ui/app.py)
-- [src/arogya/rag/chunking.py](/Users/nishant/Resume Projects/AROGYA/src/arogya/rag/chunking.py)
-- [src/arogya/multimodal/pdf_pipeline.py](/Users/nishant/Resume Projects/AROGYA/src/arogya/multimodal/pdf_pipeline.py)
+2. Copy the `.env.example` to `.env` and fill in any required keys:
+   ```bash
+   cp .env.example .env
+   ```
 
-If you want to continue immediately, the next best step is to scaffold Phase 0 and create the initial FastAPI plus Streamlit starter apps.
+3. Run the FastAPI backend:
+   ```bash
+   make run-api
+   ```
+
+4. Run the Streamlit UI (in a separate terminal):
+   ```bash
+   make run-ui
+   ```
