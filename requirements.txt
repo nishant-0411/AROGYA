@@ -34,3 +34,6 @@ trl
 deepeval
 plotly
 numpy
+celery
+redis
+orjson
