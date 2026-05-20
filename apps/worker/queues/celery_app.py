@@ -9,6 +9,7 @@ celery_app = Celery(
     backend=redis_url,
     include=[
         "apps.worker.jobs.ingest_documents",
+        "apps.worker.jobs.ingest_images",
         "apps.worker.jobs.run_agents",
         "apps.worker.jobs.generate_report"
     ]
