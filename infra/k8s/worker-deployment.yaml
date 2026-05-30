@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: arogya-worker:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: REDIS_URL
+          value: "redis://redis:6379/0"
+        - name: QDRANT_URL
+          value: "http://qdrant:6333"
+        - name: DATABASE_URL
+          value: "postgresql://postgres:postgres@postgres:5432/arogya"

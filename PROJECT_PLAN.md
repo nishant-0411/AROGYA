@@ -701,6 +701,7 @@ Your final generated report should eventually have these sections:
 
 ## What To Create Right After This File
 
+
 Start with these 8 files immediately:
 
 1. [`README.md`](/Users/nishant/Resume Projects/AROGYA/README.md)
