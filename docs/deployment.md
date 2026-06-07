@@ -34,7 +34,35 @@ Once completed, Terraform will print outputs including:
 - `ecr_worker_url`
 - `ecr_ui_url`
 
-## Step 2: Configure Kubernetes Access
+## Step 2: Authenticate to ECR and Push Images
+
+Retrieve the login password and authenticate your Docker daemon to your ECR registry:
+```bash
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <YOUR_AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com
+```
+
+Build the Docker images from the project root:
+```bash
+docker build -t arogya-api -f infra/docker/api.Dockerfile .
+docker build -t arogya-worker -f infra/docker/worker.Dockerfile .
+docker build -t arogya-ui -f infra/docker/ui.Dockerfile .
+```
+
+Tag the images using the repository URLs from the Terraform outputs:
+```bash
+docker tag arogya-api:latest <ecr_api_url>:latest
+docker tag arogya-worker:latest <ecr_worker_url>:latest
+docker tag arogya-ui:latest <ecr_ui_url>:latest
+```
+
+Push the images to ECR:
+```bash
+docker push <ecr_api_url>:latest
+docker push <ecr_worker_url>:latest
+docker push <ecr_ui_url>:latest
+```
+
+## Step 3: Configure Kubernetes Access
 
 Connect `kubectl` to the newly created EKS cluster:
 ```bash
@@ -46,9 +74,21 @@ Verify connection:
 kubectl get nodes
 ```
 
-## Step 3: Deploy Application components
+## Step 4: Configure Environment Variables
 
-Deploy dependencies (Redis, PostgreSQL, Qdrant) and the application deployments:
+Update the image references and database connections in the deployment files located in `infra/k8s/` before deploying.
+
+In `infra/k8s/api-deployment.yaml` and `infra/k8s/worker-deployment.yaml`, update the environment variables:
+- `REDIS_URL`: Set to `redis://<redis_primary_endpoint>:6379/0`
+- `DATABASE_URL`: Set to `postgresql://<db_username>:<db_password>@<rds_endpoint>/arogya`
+- Update the `image` fields to use the corresponding ECR repository URLs (`<ecr_api_url>:latest`, `<ecr_worker_url>:latest`).
+
+In `infra/k8s/ui-deployment.yaml`:
+- Update the `image` field to use the ECR UI repository URL (`<ecr_ui_url>:latest`).
+
+## Step 5: Deploy Application Components
+
+Deploy the services and deployments:
 ```bash
 kubectl apply -f infra/k8s/
 ```
