@@ -50,6 +50,7 @@ transformers==5.5.3
 peft==0.19.1
 trl==1.3.0
 accelerate==1.13.0
+sentence-transformers==5.4.0
 
 # Tools & Utilities
 duckduckgo-search==8.1.1
