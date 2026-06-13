@@ -1,299 +1,290 @@
 # Arogya
 
-Production-style multimodal medical research assistant built around the `OmniMind` architecture.
+> Production-grade multimodal medical research assistant built on the **OmniMind** architecture.
 
-`Arogya` is designed as a serious portfolio project that combines:
+Arogya demonstrates the full depth of an AI engineering portfolio — not just a chatbot, but a system that combines multimodal input handling, LangGraph multi-agent orchestration, citation-backed RAG, a LoRA fine-tuning pipeline, evaluation suites, async task workers, containerised deployment, and cloud infrastructure-as-code.
 
-- multimodal input handling
-- multi-agent orchestration
-- RAG with citation-backed retrieval
-- fine-tuning workflow
-- evaluation and hallucination detection
-- deployment and monitoring
-
-The long-term goal is a system where a user can upload an X-ray, a research PDF, and a text query, and receive a structured analysis report grounded in retrieved evidence instead of unsupported generation.
+---
 
 ## Why This Project Matters
 
-This project is meant to showcase all three layers together:
+Arogya is designed to show all three engineering layers together:
 
-- `ML engineering`: dataset preparation, fine-tuning, multimodal pipelines
-- `MLOps`: evals, monitoring, serving, containerization, deployment
-- `system design`: LangChain agents, memory, tools, async workflows, retrieval stack
+| Layer | What's demonstrated |
+|---|---|
+| **ML Engineering** | Multimodal pipelines, LoRA fine-tuning with PEFT/TRL, adapter merging, model evaluation |
+| **MLOps** | RAGAS + DeepEval evaluation suites, hallucination detection, regression suite, Docker + K8s + Terraform |
+| **System Design** | LangGraph agent orchestration, short/long-term memory, hybrid RAG, async Celery workers |
 
-That makes `Arogya` much stronger than a basic chatbot clone, built entirely on **free and open-source resources**, and much closer to a production-ready AI system.
+Built entirely on **open-source tools and free resources**.
+
+---
 
 ## Core Use Case
 
-Example flow:
+A user can upload a medical research paper (PDF) and optionally a patient image (e.g. an X-ray), ask a natural-language question, and receive a structured, citation-backed report:
 
-1. User uploads a medical research paper or case PDF
-2. User optionally uploads an image such as an X-ray
-3. User asks a question in natural language
-4. Multiple agents collaborate to retrieve evidence, verify claims, and draft a report
-5. The system returns a structured answer with citations, confidence notes, and limitations
+1. **Upload** a clinical research PDF (e.g. a paper on Pulmonary Embolism)
+2. **Upload** an image (e.g. a chest X-ray) — optional
+3. **Ask** a question in natural language
+4. **Multi-agent workflow** routes the query through Triage → Vision → RAG → Verifier → Report agents
+5. **Receive** a structured report with visual findings, retrieved evidence, verification scores, confidence levels, limitations, and inline citations
 
-## Architecture Overview
+---
 
-The project follows the `OmniMind` design in four layers:
+## Architecture
 
-### 1. Multimodal Input
+The system is built in four layers following the OmniMind design:
 
-- `Text / Query`
-- `PDF / Docs`
-- `Image / Video`
-- `Audio` as an optional later extension
+```
+┌─────────────────────────────────────────────────┐
+│  Multimodal Input Layer                         │
+│  Text · PDF/Docs · Images (X-rays, scans)       │
+└────────────────────┬────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────┐
+│  LangGraph Agent Orchestration                  │
+│                                                 │
+│  Triage ──► Vision ──► RAG ──► Verifier ──► Report │
+└────────────────────┬────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────┐
+│  Core Intelligence Layer                        │
+│  Qdrant Vector DB · LangChain · Session &       │
+│  Case Memory · PubMed · DuckDuckGo · Ollama     │
+└────────────────────┬────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────┐
+│  Serving & Infra Layer                          │
+│  FastAPI · Streamlit · Celery · Redis ·         │
+│  PostgreSQL · Docker · Kubernetes · Terraform   │
+└─────────────────────────────────────────────────┘
+```
 
-### 2. Agent Layer
+### Agents (`src/arogya/agents/`)
 
-- `Triage Agent` to understand the task and route it
-- `RAG Agent` to fetch grounded evidence
-- `Vision Agent` to process image inputs
-- `Verifier Agent` to cross-check claims
-- `Report Agent` to synthesize the final answer
-- `Guardrail Agent` to enforce high-stakes safety rules
+| Agent | Responsibility |
+|---|---|
+| `triage_agent.py` | Parses the incoming state, detects image presence, and routes to Vision or RAG |
+| `vision_agent.py` | Analyses uploaded images via the vision model gateway; extracts radiological findings |
+| `rag_agent.py` | Queries Qdrant with hybrid retrieval and attaches cited passages to the state |
+| `verifier_agent.py` | Cross-checks claims for potential hallucinations and assigns a verification score |
+| `report_agent.py` | Synthesises the final structured report from all agent outputs |
 
-### 3. Core Intelligence Layer
+The agents are wired together as a **LangGraph `StateGraph`** in `src/arogya/orchestrator/graph.py`.
 
-- LangChain-based orchestration
-- short-term and long-term memory
-- vector retrieval (free local vector db)
-- external free tools such as PubMed and DuckDuckGo search
-- model gateway for local open-source models (via Ollama) and fine-tuned models
+---
 
-### 4. Output and Serving
-
-- `FastAPI` backend
-- `Streamlit` demo UI
-- background workers for long-running tasks
-- evaluation dashboard
-- Docker and cloud deployment
-
-## Planned Tech Stack
-
-### Backend and serving
-
-- Python `3.11`
-- `FastAPI`
-- `Streamlit`
-- `Celery`
-- `Redis`
-- `PostgreSQL`
-- `Qdrant`
-
-### ML and multimodal
-
-- `torch`
-- `transformers`
-- `sentence-transformers`
-- `peft`
-- `trl`
-- `accelerate`
-- `bitsandbytes`
-- `pymupdf`
-- `unstructured`
-- `pytesseract`
-- `Pillow`
-
-### Retrieval and evaluation
-
-- `LangChain`
-- `ragas`
-- `MLflow`
-- `pytest`
-- `ruff`
-- `mypy`
-
-## Project Status
-
-Current state:
-
-- architecture diagram and project plan added
-- implementation in progress (Phases 0-7 complete)
-- FastAPI backend and Streamlit UI available
-- evaluation suites and hallucination detection integrated
-
-Roadmap source:
-
-- [PROJECT_PLAN.md](PROJECT_PLAN.md)
-- [omnimind_architecture.svg](omnimind_architecture.svg)
-
-## Planned Repository Structure
+## Repository Structure
 
 ```text
 AROGYA/
 ├── apps/
-│   ├── api/
-│   ├── ui/
-│   └── worker/
-├── src/
-│   └── arogya/
-│       ├── agents/
-│       ├── orchestrator/
-│       ├── multimodal/
-│       ├── rag/
-│       ├── models/
-│       ├── memory/
-│       ├── tools/
-│       └── evals/
+│   ├── api/                        # FastAPI backend (main.py + route handlers)
+│   ├── ui/                         # Streamlit frontend (app.py + pages/)
+│   └── worker/                     # Celery async task worker
+├── src/arogya/
+│   ├── agents/                     # Triage, RAG, Vision, Verifier, Report agents
+│   ├── orchestrator/               # LangGraph StateGraph (graph.py, state.py)
+│   ├── multimodal/                 # PDF, image, and text ingestion pipelines
+│   ├── rag/                        # Chunking, embeddings, retriever, citation builder
+│   ├── models/
+│   │   ├── vision_gateway.py       # Ollama-backed vision model router
+│   │   └── finetune/               # LoRA dataset prep, training, merge, evaluation
+│   ├── memory/                     # Session memory + persistent patient case memory
+│   ├── tools/                      # PubMed, DuckDuckGo, calculator tools
+│   └── evals/                      # RAGAS, hallucination, multimodal, regression evals
+├── infra/
+│   ├── docker/                     # Dockerfiles for api / ui / worker
+│   ├── k8s/                        # Kubernetes manifests (api, ui, worker, qdrant)
+│   └── terraform/                  # AWS VPC, EKS, RDS (Postgres), ElastiCache (Redis), ECR
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── evals/
 ├── data/
 ├── docs/
+│   └── demo-script.md              # Step-by-step demo walkthrough
 ├── notebooks/
 ├── scripts/
-├── tests/
+├── docker-compose.yml
+├── Makefile
+├── pyproject.toml
+├── requirements.txt
 ├── PROJECT_PLAN.md
 └── omnimind_architecture.svg
 ```
 
-## Phase Roadmap
+---
 
-### Phase 0
+## Tech Stack
 
-Repo foundation:
+### Backend & Serving
+- **Python 3.11** · **FastAPI** · **Uvicorn** · **Pydantic v2**
+- **Streamlit** + Plotly (frontend UI)
+- **Celery** + **Redis** (async task queue)
+- **PostgreSQL** + SQLAlchemy (relational store)
+- **Qdrant** (vector database)
 
-- project skeleton
-- env config
-- FastAPI health endpoint
-- blank Streamlit app
-- lint and test setup
+### ML & Multimodal
+- `torch` · `transformers` · `sentence-transformers`
+- `peft` · `trl` · `accelerate` (LoRA fine-tuning)
+- `PyMuPDF` · `unstructured` · `pytesseract` · `Pillow` (document & OCR parsing)
+- **Ollama** (local open-source LLM & vision model gateway)
 
-### Phase 1
+### Agentic Framework
+- **LangChain** · **LangGraph** · `langchain-qdrant` · `langchain-huggingface`
 
-Multimodal ingestion baseline:
+### Retrieval & Evaluation
+- **RAGAS** · **DeepEval** (RAG evaluation metrics)
+- `duckduckgo-search` · PubMed API (external knowledge tools)
 
-- PDF parsing
-- OCR support
-- image ingestion
-- normalized document schema
+### Infrastructure
+- **Docker** + **Docker Compose**
+- **Kubernetes** (K8s manifests for all services)
+- **Terraform** (AWS EKS, RDS, ElastiCache, ECR, VPC)
 
-### Phase 2
+### Developer Tooling
+- `pytest` · `pytest-asyncio` · `ruff` · `black` · `mypy` · `pre-commit`
 
-RAG MVP:
-
-- chunking
-- embeddings
-- hybrid retrieval
-- citations
-
-### Phase 3
-
-Multi-agent orchestration:
-
-- triage
-- retrieval
-- verification
-- report generation
-
-### Phase 4
-
-Memory and tooling:
-
-- session memory (LangChain)
-- persistent case memory
-- PubMed integration
-- optional external search (DuckDuckGo or other free API)
-
-### Phase 5
-
-Vision support:
-
-- image-based findings
-- multimodal reasoning
-- image plus literature report generation
-
-### Phase 6
-
-Fine-tuning pipeline:
-
-- dataset preparation
-- LoRA training
-- adapter merge
-- before and after evaluation
-
-### Phase 7
-
-Reliability and evals:
-
-- RAGAS
-- hallucination detection
-- regression suite
-- evaluation dashboard
-
-### Phase 8
-
-Production serving:
-
-- async job execution
-- report generation workers
-- Docker stack
-
-### Phase 9
-
-Cloud and portfolio polish:
-
-- deployment manifests
-- monitoring
-- demo script
-- interview-ready documentation
-
-## First Milestone
-
-The best first milestone for this repo is:
-
-- upload one medical paper PDF
-- ask one query in chat
-- retrieve relevant chunks
-- generate a cited answer
-- display citations in the UI
-
-That milestone alone already demonstrates practical RAG value.
-
-## Planned Output Format
-
-The final system should generate reports with:
-
-- user query
-- input summary
-- retrieved evidence
-- image findings if present
-- verification notes
-- final synthesized answer
-- confidence level
-- limitations
-- citations
-
-## Responsible AI Notes
-
-This project should be presented as a `medical research assistant`, not as a diagnostic or clinical decision system.
-
-Rules for the build:
-
-- use only public or de-identified datasets
-- show citations for factual claims
-- mark uncertainty explicitly
-- avoid diagnosis-style language in the UI
-- keep verification and guardrails visible in the system design
+---
 
 ## Getting Started
 
-1. Create a virtual environment and install dependencies:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
+### Prerequisites
 
-2. Copy the `.env.example` to `.env` and fill in any required keys:
-   ```bash
-   cp .env.example .env
-   ```
+- Python 3.11+
+- [Ollama](https://ollama.com/) installed and running locally (`ollama serve`)
+- Docker (for the full stack)
 
-3. Run the FastAPI backend:
-   ```bash
-   make run-api
-   ```
+### Local Development
 
-4. Run the Streamlit UI (in a separate terminal):
-   ```bash
-   make run-ui
-   ```
+```bash
+# 1. Clone and create a virtual environment
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# 2. Set environment variables
+cp .env.example .env
+# Edit .env and fill in any required keys
+
+# 3. Start infrastructure (Qdrant, Redis, Postgres)
+docker-compose up -d redis qdrant postgres
+
+# 4. Run the FastAPI backend
+make run-api          # → http://localhost:8000
+                      #   Docs at http://localhost:8000/docs
+
+# 5. Run the Streamlit UI (separate terminal)
+make run-ui           # → http://localhost:8501
+```
+
+### Full Stack with Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+This starts all six services: `api`, `worker`, `ui`, `redis`, `qdrant`, `postgres`.
+
+### Running Tests
+
+```bash
+pytest tests/
+```
+
+---
+
+## Evaluation Suite
+
+The `src/arogya/evals/` module provides four evaluation scripts:
+
+| Script | What it measures |
+|---|---|
+| `ragas_eval.py` | Retrieval faithfulness, answer relevancy, context precision via RAGAS |
+| `hallucination_eval.py` | Hallucination detection using DeepEval |
+| `multimodal_eval.py` | Vision pipeline accuracy and multimodal report quality |
+| `regression_suite.py` | End-to-end regression tests across known queries |
+
+---
+
+## Fine-Tuning Pipeline
+
+The `src/arogya/models/finetune/` directory contains the full LoRA pipeline:
+
+```bash
+# 1. Prepare a medical instruction dataset
+python src/arogya/models/finetune/prepare_dataset.py --demo
+
+# 2. Train a LoRA adapter (uses PEFT + TRL)
+python src/arogya/models/finetune/train_lora.py
+
+# 3. Merge the adapter into the base model
+python src/arogya/models/finetune/merge_adapter.py
+
+# 4. Evaluate base vs. fine-tuned performance
+python src/arogya/models/finetune/evaluate_model.py
+```
+
+---
+
+## Cloud Deployment
+
+### Kubernetes
+
+Manifests for all services are in `infra/k8s/`:
+
+```bash
+kubectl apply -f infra/k8s/
+```
+
+Services: `api-deployment.yaml`, `ui-deployment.yaml`, `worker-deployment.yaml`, `qdrant.yaml`.
+
+### AWS (Terraform)
+
+Infrastructure in `infra/terraform/` provisions:
+
+- **VPC** with public/private subnets across availability zones
+- **EKS** cluster + managed node group
+- **RDS** PostgreSQL 15 (private subnet)
+- **ElastiCache** Redis 7 replication group
+- **ECR** repositories for `arogya-api`, `arogya-worker`, `arogya-ui`
+
+```bash
+cd infra/terraform
+terraform init
+terraform plan
+terraform apply
+```
+
+---
+
+## Demo
+
+See [docs/demo-script.md](docs/demo-script.md) for a full step-by-step walkthrough covering:
+- Ingesting a clinical research paper
+- Uploading a chest X-ray
+- Running the LangGraph multi-agent workflow
+- Reviewing the generated report
+- Testing via REST API endpoints
+
+---
+
+## Responsible AI
+
+Arogya is a **medical research assistant**, not a diagnostic or clinical decision system.
+
+- Uses only public or de-identified datasets
+- All factual claims are citation-backed
+- Uncertainty is marked explicitly in every report
+- Diagnosis-style language is avoided in the UI
+- Verification and guardrail agents are visible by design
+
+---
+
+## References
+
+- [PROJECT_PLAN.md](PROJECT_PLAN.md) — phased roadmap and implementation details
+- [omnimind_architecture.svg](omnimind_architecture.svg) — architecture diagram
+- [docs/demo-script.md](docs/demo-script.md) — demo walkthrough
