@@ -6,9 +6,9 @@ import tempfile
 import os
 import streamlit as st
 
-st.set_page_config(page_title="Arogya — Query", page_icon="🔍", layout="wide")
+st.set_page_config(page_title="Arogya — Query", layout="wide")
 
-st.title("🔍 Query the Research Assistant")
+st.title("Query the Research Assistant")
 st.caption("Upload a document and ask a question. The agent pipeline will retrieve evidence and generate a cited answer.")
 
 st.divider()
@@ -28,7 +28,7 @@ with col_query:
         placeholder="e.g. What are the key findings about lung nodule detection in this paper?",
         height=150,
     )
-    run = st.button("▶ Run Analysis", type="primary", disabled=not (pdf_file and query))
+    run = st.button("Run Analysis", type="primary", disabled=not (pdf_file and query))
 
 st.divider()
 
@@ -72,21 +72,21 @@ if run and pdf_file and query:
             result = run_agent_workflow(initial_state)
 
             st.success("Analysis complete!")
-            st.subheader("📋 Report")
+            st.subheader("Report")
             st.markdown(result.get("final_report") or "_No report generated._")
 
             if result.get("verification_score") is not None:
-                st.subheader("🛡️ Verification Score")
+                st.subheader("Verification Score")
                 st.metric("Score", f"{result['verification_score']:.2f}")
 
             if result.get("retrieved_docs"):
-                st.subheader("📎 Retrieved Evidence")
+                st.subheader("Retrieved Evidence")
                 for i, doc in enumerate(result["retrieved_docs"], 1):
                     with st.expander(f"Chunk {i}"):
                         st.write(doc)
 
             if result.get("scratchpad"):
-                with st.expander("🧠 Agent Scratchpad"):
+                with st.expander("Agent Scratchpad"):
                     st.text(result["scratchpad"])
 
             # Clean up any leftover temp image files

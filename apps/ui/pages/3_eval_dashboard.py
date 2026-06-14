@@ -23,7 +23,7 @@ def generate_mock_data() -> pd.DataFrame:
     return pd.DataFrame(data)
 
 def render_dashboard() -> None:
-    st.set_page_config(page_title="Evaluation Dashboard", page_icon="📊", layout="wide")
+    st.set_page_config(page_title="Evaluation Dashboard", layout="wide")
     st.title("Evaluation Metrics Dashboard")
     df = generate_mock_data()
     st.sidebar.header("Filters")
